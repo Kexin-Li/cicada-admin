@@ -1,0 +1,26 @@
+[
+  {
+    "path": "/posts",
+    "method": "get",
+    "module": "posts",
+    "handler": "fetchPosts"
+  },
+  {
+    "path": "/hexoserver",
+    "method": "get",
+    "module": "hexo",
+    "handler": "server"
+  },
+  {
+    "path": "/hexodeploy",
+    "method": "get",
+    "module": "hexo",
+    "handler": "deploy"
+  },
+  {
+    "path": "/hexostop",
+    "method": "get",
+    "module": "hexo",
+    "handler": "kill"
+  }
+]
