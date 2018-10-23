@@ -14,13 +14,13 @@ ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
       <Switch>
-        <Route path='/posts' component={ App } />
-        <Route path='/drafts' component={ App } />
-        <Route path='/pages' component={ App } />
-        <Route path='/tags' component={ App } />
-        <Route path='/settings' component={ App } />
-        <Route path='/posts/:name' component={ App } />
-        <Route path='/' component={ App } />
+        <Route path="/posts" component={App} />
+        <Route path="/drafts" component={App} />
+        <Route path="/pages" component={App} />
+        <Route path="/tags" component={App} />
+        <Route path="/settings" component={App} />
+        <Route path="/posts/:name" component={App} />
+        <Route path="/" component={App} />
       </Switch>
     </BrowserRouter>
   </Provider>,

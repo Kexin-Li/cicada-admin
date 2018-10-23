@@ -2,14 +2,17 @@ import React from 'react';
 import { Button, Popover } from 'antd';
 
 const MyButton = (props) => {
+  const {
+    content, type, onClickHandler, btnName
+  } = props;
   return (
-    <Popover content={ props.content }>
+    <Popover content={content}>
       <Button
-        type={ props.type }
+        type={type}
         style={{ marginRight: '10px' }}
-        onClick={ props.onClickHandler }
+        onClick={onClickHandler}
       >
-        { props.btnName }
+        { btnName }
       </Button>
     </Popover>
   );

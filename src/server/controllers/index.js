@@ -3,12 +3,9 @@ const HEXO_PATH = require('../models/config-init').data(),
     FS = require('fs'),
     GET_ALL_DATA = require('../models/get-all-data');
 
-exports.fetchPosts = function(req, res) {
-  
-};
-
 exports.entry = function(req, res) {
   deleteDBCache();
+  GET_ALL_DATA.updateDBFile();
   res.send({ db: require('../__siteDB.json')});
 };
 

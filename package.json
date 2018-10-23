@@ -10,7 +10,7 @@
     "server": "nodemon src/server/index.js",
     "dev": "concurrently 'npm run server' 'npm run client'"
   },
-  "author": "Kexin-Li",
+  "author": "Kexin Li",
   "license": "MIT",
   "dependencies": {
     "antd": "^3.10.0",
@@ -20,6 +20,7 @@
     "extend": "^3.0.2",
     "hexo-front-matter": "^0.2.3",
     "node-dir": "^0.1.17",
+    "prop-types": "^15.6.2",
     "react": "^16.5.2",
     "react-dom": "^16.5.2",
     "react-redux": "^5.0.7",

@@ -1,59 +1,65 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Layout } from 'antd';
+import { PropTypes } from 'prop-types';
 
-// import Posts from './Posts';
 import Settings from './Setttings';
 import Tags from './Tags';
 import Post from './Post';
 import PostsList from './PostsList';
 
-const { Header, Content } = Layout;
+const { Content } = Layout;
 
 const Preview = (props) => {
-  let data = props.posts;
+  let { posts } = props;
   const renderPosts = () => {
-    switch(props.view) {
+    switch (props.view) {
       case 'posts':
-        data = props.posts;
+        posts = posts;
         break;
       case 'drafts':
-        data = props.drafts;
+        posts = props.drafts;
         break;
       case 'pages':
-        data = props.pages;
+        posts = props.pages;
         break;
       case 'settings':
-        data = props.settings;
-        return <Settings view={ data } />;
+        posts = props.settings;
+        return <Settings view={posts} />;
       case 'tags':
-        data = props.tags;
-        return <Tags view={ data } />;
+        posts = props.tags;
+        return <Tags view={posts} />;
       case 'post':
         return <Post />;
       default:
-        data = props.posts;
+        posts = posts;
     }
-    return <PostsList view={ data } />;
+    return <PostsList view={posts} />;
   };
   return (
     <Content style={{ margin: '40px' }}>
-      <div className='preview' style={{ padding: 24, background: '#fff', minHeight: 360 }}>
+      <div className="preview" style={{ padding: 24, background: '#fff', minHeight: 360 }}>
         { renderPosts() }
       </div>
     </Content>
   );
 };
 
-const mapStateToProps = (state) => {
-  return {
-    posts: state.postsReducer.posts,
-    drafts: state.postsReducer.drafts,
-    pages: state.postsReducer.pages,
-    settings: state.postsReducer.settings,
-    tags: state.postsReducer.tags,
-    view: state.viewReducer.view
-  };
+const mapStateToProps = state => ({
+  posts: state.postsReducer.posts,
+  drafts: state.postsReducer.drafts,
+  pages: state.postsReducer.pages,
+  settings: state.postsReducer.settings,
+  tags: state.postsReducer.tags,
+  view: state.viewReducer.view
+});
+
+Preview.propTypes = {
+  posts: PropTypes.string
+};
+
+Preview.defaultProps = {
+  posts: {}
 };
 
 export default connect(mapStateToProps)(Preview);

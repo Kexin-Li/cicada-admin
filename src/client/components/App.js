@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { Layout, Button } from 'antd';
+import { Layout } from 'antd';
+import PropTypes from 'prop-types';
 
 import DeployBtn from './Header/DeployBtn';
 import SideBar from './SideBar/SideBar';
@@ -11,11 +12,12 @@ import Footer from './Footer/Footer';
 import { fetchPosts } from '../actions/fetchPosts';
 import './App.css';
 
-const { Content, Sider, Header } = Layout;
+const { Header } = Layout;
 
 class App extends Component {
   componentDidMount() {
-    this.props.fetchPosts();
+    const { fetchPosts } = this.props;
+    fetchPosts();
   }
 
   render() {
@@ -34,10 +36,16 @@ class App extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => {
-  return bindActionCreators({
-    fetchPosts
-  }, dispatch);
+App.propTypes = {
+  fetchPosts: PropTypes.func
 };
+
+App.defaultProps = {
+  fetchPosts
+};
+
+const mapDispatchToProps = dispatch => bindActionCreators({
+  fetchPosts
+}, dispatch);
 
 export default connect(null, mapDispatchToProps)(App);

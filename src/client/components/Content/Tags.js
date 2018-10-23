@@ -3,15 +3,13 @@ import { Tag } from 'antd';
 
 const Tags = (props) => {
   const renderTags = () => {
-    const tags = props.view;
-    console.log(tags);
-    if (tags) {
-      const tagsArr = Object.keys(tags);
-      return tagsArr.map((tag, index) => {
-        return (
-          <Tag key={ index }>{ tag }</Tag>
-        );
-      });
+    const { view } = props;
+    console.log(view);
+    if (view) {
+      const tagsArr = Object.keys(view);
+      return tagsArr.map((tag, index) => (
+        <Tag key={index}>{tag}</Tag>
+      ));
     }
   };
   return (

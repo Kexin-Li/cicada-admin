@@ -7,9 +7,9 @@ const CardLang = (props) => {
 
   return (
     <div>
-      <Icon type='global' style={{ marginRight: '5px' }} />
+      <Icon type="global" style={{ marginRight: '5px' }} />
       { props.lang ? <span>{ props.lang }</span> : '' }
-      { props.lang ? <Divider type='vertical' /> : '' }
+      { props.lang ? <Divider type="vertical" /> : '' }
       {date ? <span>{ date }</span> : '' }
     </div>
   );

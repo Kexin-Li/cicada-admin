@@ -57,7 +57,7 @@ function isPathReady() {
 
 function data() {
   config.configPath = configPath;
-  config.adminPath = PATH.join(__dirname, '../');
+  config.adminPath = PATH.join(__dirname);
   config.siteConfig = PATH.join(config.rootPath, '_config.yml');
   config.themeConfig = PATH.join(config.rootPath, 'themes', config.theme, '_config.yml');
   config.sourcePath = PATH.join(config.rootPath, 'source');

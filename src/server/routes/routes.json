@@ -2,8 +2,8 @@
   {
     "path": "/posts",
     "method": "get",
-    "module": "posts",
-    "handler": "fetchPosts"
+    "module": "index",
+    "handler": "entry"
   },
   {
     "path": "/hexoserver",
