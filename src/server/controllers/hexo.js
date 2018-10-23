@@ -1,52 +1,54 @@
-const CHILD_PROCESS = require('child_process'),
-  HEXO_PATH = require('../models/config-init').data(),
-  TREE_KILL = require('tree-kill');
+const CHILD_PROCESS = require('child_process');
+const HEXO_PATH = require('../models/config-init').data();
+const TREE_KILL = require('tree-kill');
 
-var hexo_server = null,
-  isWin = /^win/.test(process.platform),
-  hexo_pid = NaN;
-hexo_cli = isWin ? 'hexo.cmd' : 'hexo';
+let hexoServer = null;
+const isWin = /^win/.test(process.platform);
+
+
+let hexoPid = NaN;
+hexoCli = isWin ? 'hexo.cmd' : 'hexo';
 
 exports.server = function (req, res) {
   try {
-    if (!Number.isNaN(hexo_pid)) killHexo();
+    if (!Number.isNaN(hexoPid)) killHexo();
 
     // 启动时先 clean 一下
-    var clean = CHILD_PROCESS.spawn(
-      hexo_cli,
+    const clean = CHILD_PROCESS.spawn(
+      hexoCli,
       ['clean'], {
         cwd: HEXO_PATH.rootPath
       }
     );
 
-    clean.stdout.on('data', function (data) {
+    clean.stdout.on('data', (data) => {
       console.log(data.toString('utf8'));
     });
 
-    clean.on('exit', function () {
+    clean.on('exit', () => {
       console.log('hexo cleaned!');
-      hexo_server = CHILD_PROCESS.spawn(
-        hexo_cli,
+      hexoServer = CHILD_PROCESS.spawn(
+        hexoCli,
         ['server'], {
           cwd: HEXO_PATH.rootPath
         }
       );
 
-      hexo_pid = hexo_server.pid;
-      console.log('hexo pid:' + hexo_pid);
+      hexoPid = hexoServer.pid;
+      console.log(`hexo pid:${hexoPid}`);
 
-      hexo_server.stdout.on('data', function (data) {
+      hexoServer.stdout.on('data', (data) => {
         console.log(data.toString('utf8'));
       });
 
       res.json({
-        "status": "success"
+        status: 'success'
       });
     });
   } catch (e) {
     res.status(500).send({
-      "status": "error",
-      "msg": "hexo server launch failed！"
+      status: 'error',
+      msg: 'hexo server launch failed！'
     });
   }
 };
@@ -55,7 +57,7 @@ exports.kill = function (req, res) {
   try {
     killHexo();
     res.json({
-      "status": "success"
+      status: 'success'
     });
   } catch (e) {
     res.status(500).send(e);
@@ -64,44 +66,44 @@ exports.kill = function (req, res) {
 
 exports.deploy = function (req, res) {
   try {
-    var hexo_deploy = CHILD_PROCESS.spawn(
-      hexo_cli,
+    const hexo_deploy = CHILD_PROCESS.spawn(
+      hexoCli,
       ['deploy', '-g'], {
         cwd: HEXO_PATH.rootPath
       }
     );
 
-    hexo_deploy.stdout.on('data', function (data) {
+    hexo_deploy.stdout.on('data', (data) => {
       console.log(data.toString('utf8'));
     });
 
-    hexo_deploy.on('exit', function () {
+    hexo_deploy.on('exit', () => {
       console.log('hexo deployed!');
       res.json({
-        "status": "success"
+        status: 'success'
       });
     });
   } catch (e) {
     res.status(500).send({
-      "status": "error",
-      "msg": "hexo deploy failed！"
+      status: 'error',
+      msg: 'hexo deploy failed！'
     });
   }
 };
 
 function killHexo() {
   if (isWin) {
-    TREE_KILL(hexo_pid, 'SIGTERM', function (err) {
+    TREE_KILL(hexoPid, 'SIGTERM', (err) => {
       if (err) {
-        console.log('kill hexo failed. hexo pid:' + hexo_pid + ';error=' + JSON.stringify(err));
+        console.log(`kill hexo failed. hexo pid:${hexoPid};error=${JSON.stringify(err)}`);
         return;
       }
       console.log('hexo stopped');
-      hexo_pid = NaN;
+      hexoPid = NaN;
     });
   } else {
-    hexo_server.kill();
-    hexo_pid = NaN;
+    hexoServer.kill();
+    hexoPid = NaN;
     console.log('hexo stopped');
   }
 }

@@ -1,12 +1,13 @@
-const FS = require('fs'),
-  PATH = require('path'),
-  OS = require('os');
+const FS = require('fs');
+const PATH = require('path');
+const OS = require('os');
 
-var configPath;
+let configPath;
+let config;
 
-/^win/.test(OS.platform()) ?
-  configPath = PATH.join(OS.homedir(), 'Documents', '.hexo-local-admin-config.json') :
-  configPath = PATH.join(OS.homedir(), '.hexo-local-admin-config.json');
+/^win/.test(OS.platform())
+  ? configPath = PATH.join(OS.homedir(), 'Documents', '.hexo-local-admin-config.json')
+  : configPath = PATH.join(OS.homedir(), '.hexo-local-admin-config.json');
 
 try {
   config = require(configPath);
@@ -22,24 +23,22 @@ try {
   }
 }
 
-isPathReady();
-
 function isPathReady() {
   if (config.rootPath === '.') {
-    let msg = '\n--------\nERROR!!!\nhexo root path is not set!\ntry "hexo-admin -r your-hexo-path" to set hexo root path\n--------';
+    const msg = '\n--------\nERROR!!!\nhexo root path is not set!\ntry "hexo-admin -r your-hexo-path" to set hexo root path\n--------';
     // LOGGER.warn(msg);
     return {
       status: false,
-      msg: msg
+      msg
     };
   }
 
   if (config.theme === '.') {
-    let msg = '\n--------\nERROR!!!\nhexo theme name is not set!\ntry "hexo-admin -t your-theme-name" to set hexo theme\n--------';
+    const msg = '\n--------\nERROR!!!\nhexo theme name is not set!\ntry "hexo-admin -t your-theme-name" to set hexo theme\n--------';
     // LOGGER.warn(msg);
     return {
       status: false,
-      msg: msg
+      msg
     };
   }
 
@@ -54,6 +53,8 @@ function isPathReady() {
     throw error;
   }
 }
+
+isPathReady();
 
 function data() {
   config.configPath = configPath;

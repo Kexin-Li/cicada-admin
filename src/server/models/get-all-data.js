@@ -1,23 +1,23 @@
-const HEXO_PATH = require('../models/config-init').data(),
-  FRONT_MATTER = require('hexo-front-matter'),
-  FS = require('fs'),
-  DIR = require('node-dir'),
-  PATH = require('path'),
-  EXTEND = require('extend');
+const FRONT_MATTER = require('hexo-front-matter');
+const FS = require('fs');
+const DIR = require('node-dir');
+const PATH = require('path');
+const EXTEND = require('extend');
+const HEXO_PATH = require('../models/config-init').data();
 
 exports.updateDBFile = function () {
   let flagIndex = 0;
 
   // 初始化 _posts, _drafts, _trash文件夹
-  ['post', 'draft', 'trash'].forEach(function (item) {
+  ['post', 'draft', 'trash'].forEach((item) => {
     FS.access(
-      HEXO_PATH[item + 'Path'],
+      HEXO_PATH[`${item}Path`],
       FS.F_OK,
-      function (err) {
+      (err) => {
         if (err) {
           FS.mkdir(
-            HEXO_PATH[item + 'Path'],
-            function (e) {
+            HEXO_PATH[`${item}Path`],
+            (e) => {
               if (e) throw e;
               flagIndex++;
               if (flagIndex === 3) action();
@@ -32,38 +32,40 @@ exports.updateDBFile = function () {
   });
 
   function action() {
-    let loadingProcess = 0,
-      siteData = {
-        hexoPath: HEXO_PATH.rootPath,
-        theme: HEXO_PATH.theme,
-        themeConfig: {
-          title: 'Theme Config',
-          file_path: HEXO_PATH.themeConfig,
-          raw_content: getFile(HEXO_PATH.themeConfig)
-        },
-        siteConfig: {
-          title: 'Site Config',
-          file_path: HEXO_PATH.siteConfig,
-          raw_content: getFile(HEXO_PATH.siteConfig)
-        }
-      };
+    let loadingProcess = 0;
 
-    getMdFiles(HEXO_PATH.postPath, null, function (dataArr) {
+
+    const siteData = {
+      hexoPath: HEXO_PATH.rootPath,
+      theme: HEXO_PATH.theme,
+      themeConfig: {
+        title: 'Theme Config',
+        file_path: HEXO_PATH.themeConfig,
+        raw_content: getFile(HEXO_PATH.themeConfig)
+      },
+      siteConfig: {
+        title: 'Site Config',
+        file_path: HEXO_PATH.siteConfig,
+        raw_content: getFile(HEXO_PATH.siteConfig)
+      }
+    };
+
+    getMdFiles(HEXO_PATH.postPath, null, (dataArr) => {
       siteData.posts = dataArr;
       done();
     });
-    getMdFiles(HEXO_PATH.draftPath, null, function (dataArr) {
+    getMdFiles(HEXO_PATH.draftPath, null, (dataArr) => {
       siteData.drafts = dataArr;
       done();
     });
-    getMdFiles(HEXO_PATH.trashPath, null, function (dataArr) {
+    getMdFiles(HEXO_PATH.trashPath, null, (dataArr) => {
       siteData.trash = dataArr;
       done();
     });
     getMdFiles(HEXO_PATH.sourcePath, {
       match: /index\.md$/,
       excludeDir: ['_drafts', '_posts', '_trash']
-    }, function (dataArr) {
+    }, (dataArr) => {
       siteData.pages = dataArr;
       done();
     });
@@ -74,7 +76,7 @@ exports.updateDBFile = function () {
         FS.writeFile(
           PATH.join(HEXO_PATH.adminPath, '__siteDB.json'),
           JSON.stringify(siteData),
-          function (err) {
+          (err) => {
             if (err) throw err;
             // LOGGER.info('__siteDB.json update!');
           }
@@ -92,22 +94,22 @@ exports.updateDBFile = function () {
  * @returns {object[]} array of file content
  * */
 function getMdFiles(dirPath, match, callback) {
-  let data = [];
+  const data = [];
 
   DIR.readFiles(dirPath, match || {
-      match: /.md$/
-    },
-    function (err, content, filename, next) {
-      if (err) throw err;
-      data.push(EXTEND(parseFileContent(filename, content), {
-        page_url: filename.replace(/^.*source\//g, '')
-      }));
-      next();
-    },
-    function (err, files) {
-      if (err) throw err;
-      callback(data.sort(sortListFromNewToOld));
-    });
+    match: /.md$/
+  },
+  (err, content, filename, next) => {
+    if (err) throw err;
+    data.push(EXTEND(parseFileContent(filename, content), {
+      page_url: filename.replace(/^.*source\//g, '')
+    }));
+    next();
+  },
+  (err, files) => {
+    if (err) throw err;
+    callback(data.sort(sortListFromNewToOld));
+  });
 }
 
 /**
@@ -116,7 +118,7 @@ function getMdFiles(dirPath, match, callback) {
  * @returns {string} fileContent
  * */
 function getFile(filePath) {
-  var fileContent;
+  let fileContent;
 
   try {
     fileContent = FS.readFileSync(filePath, 'utf-8');
@@ -133,7 +135,7 @@ function getFile(filePath) {
  * @param content {string} file content
  * */
 function parseFileContent(fileNameWithPath, content) {
-  let file = {
+  const file = {
     file_name: fileNameWithPath.replace(/^.*\//g, ''),
     file_path: fileNameWithPath,
     raw_content: content
@@ -150,15 +152,15 @@ function parseFileContent(fileNameWithPath, content) {
  * @returns {object} tag统计对象
  * */
 function getTagData(fileArr) {
-  var tagData = {
+  const tagData = {
     length: 0
   };
 
-  fileArr.forEach(function (item) {
+  fileArr.forEach((item) => {
     if (!item.hasOwnProperty('tags') || !item.tags) return;
-    Array.isArray(item.tags) ?
-      item.tags.forEach(addNewTag) :
-      addNewTag(item.tags);
+    Array.isArray(item.tags)
+      ? item.tags.forEach(addNewTag)
+      : addNewTag(item.tags);
   });
 
   function addNewTag(tagName) {
@@ -179,9 +181,8 @@ function getTagData(fileArr) {
 function sortListFromNewToOld(file1, file2) {
   if (file1.date_unix > file2.date_unix) {
     return -1;
-  } else if (file1.date_unix < file2.date_unix) {
+  } if (file1.date_unix < file2.date_unix) {
     return 1;
-  } else {
-    return 0;
   }
+  return 0;
 }
